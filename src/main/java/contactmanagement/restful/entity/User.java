@@ -24,10 +24,11 @@ public class User {
 
     private String name;
 
+    @Column(name = "token", nullable = true)
     private String token;
 
-    @Column(name = "token_exired_at")
-    private Long tokenExiredAt;
+    @Column(name = "token_expired_at")
+    private Long tokenExpiredAt;
 
     @OneToMany(mappedBy = "user")
     private List<Contact> contacts; // merepresentasikan class contact dalam kolom contacts
