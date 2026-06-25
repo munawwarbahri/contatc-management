@@ -1,11 +1,13 @@
 package contactmanagement.restful.controller;
 
+import contactmanagement.restful.entity.User;
 import contactmanagement.restful.model.LoginUserRequest;
 import contactmanagement.restful.model.TokenResponse;
 import contactmanagement.restful.model.WebResponse;
 import contactmanagement.restful.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,5 +26,14 @@ public class AuthController {
     public WebResponse<TokenResponse> login(@RequestBody LoginUserRequest request){
         TokenResponse tokenResponse = authService.login(request);
         return WebResponse.<TokenResponse>builder().data(tokenResponse).build();
+    }
+
+    @DeleteMapping(
+            path = "/api/auth/logout",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public WebResponse<String> logout(User user) {
+        authService.logout(user);
+        return WebResponse.<String>builder().data("OK").build();
     }
 }

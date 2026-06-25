@@ -1,6 +1,7 @@
 package contactmanagement.restful.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -255,6 +256,53 @@ class UserControllerTest {
             User userDB = userRepository.findById("test").orElse(null);
             assertNotNull(userDB);
             assertTrue(BCrypt.checkpw("bahri12345", userDB.getPassword()));
+        });
+    }
+
+    @Test
+    void logoutFailed() throws Exception{
+        mockMvc.perform(
+           delete("/api/auth/logout")
+                   .accept(MediaType.APPLICATION_JSON)
+        ).andExpectAll(
+                status().isUnauthorized()
+        ).andDo(result -> {
+            WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(),
+                    new TypeReference<>() {});
+
+            assertNotNull(response.getErrors());
+        });
+
+    }
+
+    @Test
+    void logoutSuccess() throws Exception{
+        User user = new User();
+        user.setUsername("test");
+        user.setName("Test");
+        user.setPassword(BCrypt.hashpw("test", BCrypt.gensalt()));
+        user.setToken("test");
+        user.setTokenExpiredAt(System.currentTimeMillis() + 10000000L);
+        userRepository.save(user);
+
+        mockMvc.perform(
+                delete("/api/auth/logout")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-API-TOKEN", "test")
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+            WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(),
+                    new TypeReference<>() {});
+
+            assertNull(response.getErrors());
+            assertEquals("OK", response.getData());
+
+            //memastikan token di database kosong
+            User userDB =  userRepository.findById("test").orElse(null);
+            assertNotNull(userDB);
+            assertNull(userDB.getTokenExpiredAt());
+            assertNull(userDB.getToken());
         });
     }
 }

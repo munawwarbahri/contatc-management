@@ -2,32 +2,21 @@
 
 ## Create Contact
 
-Endpoint: POST /api/contacts
+Endpoint: GET /api/contacts/{idContact}
 
 Request Header:
 
 - X-API-TOKEN: Token (Mandatory)
-
-Request Body:
-
-```json
-{
-   "firstName": "Eko Kurniawan",
-    "lastName": "Khannedy",
-    "email": "eko@example.com",
-    "phone": "081234567890"
-}
-```
 
 Response Body (Success):
 
 ```json
 {
   "data": {
-    "id": "random string",
-    "firstName": "Eko Kurniawan",
-    "lastName": "Khannedy",
-    "email": "eko@example.com",
+    "id": "random-string",
+    "firstName": "Bahri",
+    "lastName": "Munawwar",
+    "email": "bahri@example.com",
     "phone": "081234567890"
   }
 }
