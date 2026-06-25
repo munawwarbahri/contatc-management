@@ -8,11 +8,11 @@
         <version>4.1.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>programer-zaman-now</groupId>
-    <artifactId>contact-management-spring-restful-api</artifactId>
+    <groupId>com.bahriproject.contact</groupId>
+    <artifactId>contact-management-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Belajar Spring RESTful API</name>
-    <description>Belajar Spring RESTful API</description>
+    <name>Contact Management API</name>
+    <description>Spring Boot RESTful API for contact management system</description>
     <url/>
     <licenses>
         <license/>
