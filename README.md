@@ -164,8 +164,9 @@ Semua endpoint mengembalikan response dalam format berikut:
 
 ### Prasyarat
 - Java 17+
-- Maven atau Gradle
-- Database (MySQL / PostgreSQL)
+- Maven
+- MySQL 8.0
+- Docker & Docker Compose (opsional)
 
 ### Langkah Instalasi
 
@@ -177,9 +178,10 @@ Semua endpoint mengembalikan response dalam format berikut:
 
 2. Konfigurasi database di `src/main/resources/application.properties`
    ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/contact_management
-   spring.datasource.username=root
-   spring.datasource.password=yourpassword
+   spring.datasource.url=${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/contact_management}
+   spring.datasource.username=${SPRING_DATASOURCE_USERNAME:root}
+   spring.datasource.password=${SPRING_DATASOURCE_PASSWORD:yourpassword}
+   spring.jpa.hibernate.ddl-auto=update
    ```
 
 3. Jalankan aplikasi
@@ -188,6 +190,62 @@ Semua endpoint mengembalikan response dalam format berikut:
    ```
 
 4. API siap diakses di `http://localhost:8080`
+
+---
+
+## 🐳 Menjalankan dengan Docker
+
+### Prasyarat
+- Docker
+- Docker Compose
+
+### Langkah
+
+1. Buat file `.env` di root project dan isi dengan konfigurasi berikut:
+   ```env
+   MYSQL_ROOT_PASSWORD=rootpassword
+   MYSQL_DATABASE=contact_management
+   MYSQL_USER=appuser
+   MYSQL_PASSWORD=apppassword
+   ```
+
+2. Jalankan semua service
+   ```bash
+   docker compose up --build -d
+   ```
+
+3. Cek status container
+   ```bash
+   docker compose ps
+   ```
+
+4. Lihat log aplikasi
+   ```bash
+   docker compose logs -f app
+   ```
+
+5. Matikan semua service
+   ```bash
+   docker compose down
+   ```
+
+> **Catatan:** Data MySQL disimpan di Docker volume `mysql_data` sehingga tidak hilang saat container di-restart. Untuk menghapus data juga, jalankan `docker compose down -v`.
+
+---
+
+## 🔧 Environment Variables
+
+| Variable | Default | Keterangan |
+|----------|---------|------------|
+| `SPRING_DATASOURCE_URL` | `jdbc:mysql://db:3306/contact_management` | URL koneksi database |
+| `SPRING_DATASOURCE_USERNAME` | `appuser` | Username database |
+| `SPRING_DATASOURCE_PASSWORD` | `apppassword` | Password database |
+| `SPRING_JPA_HIBERNATE_DDL_AUTO` | `update` | Strategi DDL Hibernate |
+| `SPRING_JPA_SHOW_SQL` | `false` | Tampilkan query SQL di log |
+| `MYSQL_ROOT_PASSWORD` | — | Password root MySQL (wajib diisi) |
+| `MYSQL_DATABASE` | `contact_management` | Nama database yang dibuat otomatis |
+| `MYSQL_USER` | `appuser` | User MySQL untuk aplikasi |
+| `MYSQL_PASSWORD` | `apppassword` | Password user MySQL |
 
 ---
 
@@ -206,6 +264,7 @@ Semua endpoint mengembalikan response dalam format berikut:
 
 ## 📄 Lisensi
 
+
 ---
 
-> Dibuat oleh [munawwarbahri](https://github.com/munawwarbahri)
+> made with 💙 [munawwarbahri](https://github.com/munawwarbahri)
